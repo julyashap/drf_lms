@@ -6,11 +6,18 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'phone', 'city']
+        fields = '__all__'
+
+
+class AnotherUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'city', 'phone']
 
 
 class PaymentSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = AnotherUserSerializer()
 
     class Meta:
         model = Payment
