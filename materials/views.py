@@ -1,7 +1,7 @@
 from rest_framework import generics, viewsets
 from materials.models import Course, Lesson
 from materials.permissions import IsModerator, IsOwner
-from materials.serializers import CourseSerializer, LessonSerializer
+from materials.serializers import CourseSerializer, LessonSerializer, CourseLessonSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -11,21 +11,26 @@ class CourseViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['update', 'partial_update', 'retrieve']:
             self.permission_classes = [IsModerator | IsOwner]
-        elif self.action != 'list':
+        elif self.action == 'destroy':
             self.permission_classes = [IsOwner]
+        elif self.action == 'create':
+            self.permission_classes = [~IsModerator]
         return super().get_permissions()
 
-    def create(self, request, *args, **kwargs):
-        course = super().create(request, *args, **kwargs)
-        course.owner = request.user
+    def perform_create(self, serializer):
+        course = serializer.save()
+        course.owner = self.request.user
         course.save()
-        return course
 
     def list(self, request, *args, **kwargs):
-        courses = super().list(request, *args, **kwargs)
+        self.serializer_class = CourseLessonSerializer
         if not self.request.user.groups.filter(name='moderators').exists():
-            courses = courses.filter(owner=request.user)
-        return courses
+            self.queryset = Course.objects.filter(owner=request.user)
+        return super().list(request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = CourseLessonSerializer
+        return super().retrieve(request, *args, **kwargs)
 
 
 class LessonListAPIView(generics.ListAPIView):
@@ -46,12 +51,12 @@ class LessonRetrieveAPIView(generics.RetrieveAPIView):
 class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsOwner]
+    permission_classes = [~IsModerator]
 
     def perform_create(self, serializer):
-        course = serializer.save()
-        course.owner = self.request.user
-        course.save()
+        lesson = serializer.save()
+        lesson.owner = self.request.user
+        lesson.save()
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
