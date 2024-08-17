@@ -24,10 +24,9 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         self.serializer_class = CourseLessonSerializer
-        courses = super().list(request, *args, **kwargs)
         if not self.request.user.groups.filter(name='moderators').exists():
-            courses = courses.filter(owner=request.user)
-        return courses
+            self.queryset = Course.objects.filter(owner=request.user)
+        return super().list(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
         self.serializer_class = CourseLessonSerializer
