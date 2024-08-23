@@ -3,6 +3,7 @@ from rest_framework import views
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from materials.models import Course, Lesson, CourseSubscribe
+from materials.paginators import CourseLessonPaginator
 from materials.permissions import IsModerator, IsOwner
 from materials.serializers import CourseSerializer, LessonSerializer, CourseSubscribeSerializer
 
@@ -10,6 +11,7 @@ from materials.serializers import CourseSerializer, LessonSerializer, CourseSubs
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    pagination_class = CourseLessonPaginator
 
     def get_permissions(self):
         if self.action in ['update', 'partial_update', 'retrieve']:
@@ -45,6 +47,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
+    pagination_class = CourseLessonPaginator
 
     def get_queryset(self):
         if not self.request.user.groups.filter(name='moderators').exists():
