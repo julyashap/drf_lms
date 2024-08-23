@@ -1,7 +1,7 @@
 from rest_framework import generics, viewsets
 from materials.models import Course, Lesson
 from materials.permissions import IsModerator, IsOwner
-from materials.serializers import CourseSerializer, LessonSerializer, CourseLessonSerializer
+from materials.serializers import CourseSerializer, LessonSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -23,14 +23,9 @@ class CourseViewSet(viewsets.ModelViewSet):
         course.save()
 
     def list(self, request, *args, **kwargs):
-        self.serializer_class = CourseLessonSerializer
         if not self.request.user.groups.filter(name='moderators').exists():
             self.queryset = Course.objects.filter(owner=request.user)
         return super().list(request, *args, **kwargs)
-
-    def retrieve(self, request, *args, **kwargs):
-        self.serializer_class = CourseLessonSerializer
-        return super().retrieve(request, *args, **kwargs)
 
 
 class LessonListAPIView(generics.ListAPIView):
