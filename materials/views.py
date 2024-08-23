@@ -48,6 +48,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 class LessonListAPIView(generics.ListAPIView):
     serializer_class = LessonSerializer
     pagination_class = CourseLessonPaginator
+    queryset = Lesson.objects.all()
 
     def get_queryset(self):
         if not self.request.user.groups.filter(name='moderators').exists():
