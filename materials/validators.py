@@ -14,12 +14,13 @@ class LinkValidator:
         if self.field:
             user_data = dict(value).get(self.field)
             matches = re.findall(pattern, user_data)
+            if bool(matches):
+                raise ValidationError('Ссылки на материалы можно прикреплять только с платформы YouTube!')
 
         elif self.fields:
             user_data = [dict(value).get(field) for field in self.fields]
             for data in user_data:
                 if data is not None:
                     matches = re.findall(pattern, data)
-
-        if bool(matches):
-            raise ValidationError('Ссылки на материалы можно прикреплять только с платформы YouTube!')
+                    if bool(matches):
+                        raise ValidationError('Ссылки на материалы можно прикреплять только с платформы YouTube!')
