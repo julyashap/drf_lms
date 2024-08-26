@@ -39,3 +39,7 @@ class CourseSubscribeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseSubscribe
         fields = '__all__'
+
+
+class CourseSubscribeRequestSerializer(serializers.Serializer):
+    course = serializers.IntegerField()
