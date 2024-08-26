@@ -7,7 +7,7 @@ from users.views import UserViewSet, PaymentListAPIView
 app_name = UsersConfig.name
 
 router = routers.DefaultRouter()
-router.register(r'users', UserViewSet, basename='users')
+router.register('', UserViewSet, basename='users')
 
 urlpatterns = [
     path('payments/', PaymentListAPIView.as_view(), name='list_payment'),
