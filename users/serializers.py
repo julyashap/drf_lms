@@ -21,4 +21,26 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        fields = ['date', 'sum', 'way', 'user', 'course', 'lesson']
+        fields = '__all__'
+
+
+class PaymentCourseSerializer(serializers.ModelSerializer):
+    user = AnotherUserSerializer(read_only=True)
+
+    class Meta:
+        model = Payment
+        fields = ['date', 'sum', 'way', 'session_id', 'link', 'user', 'course']
+        read_only_fields = ['date', 'sum', 'session_id', 'link']
+
+
+class PaymentLessonSerializer(serializers.ModelSerializer):
+    user = AnotherUserSerializer(read_only=True)
+
+    class Meta:
+        model = Payment
+        fields = ['date', 'sum', 'way', 'session_id', 'link', 'user', 'lesson']
+        read_only_fields = ['date', 'sum', 'session_id', 'link']
+
+
+class PaymentStatusSerializer(serializers.Serializer):
+    session_id = serializers.CharField()
