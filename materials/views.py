@@ -1,3 +1,5 @@
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, viewsets, status
 from rest_framework import views
 from rest_framework.generics import get_object_or_404
@@ -5,7 +7,8 @@ from rest_framework.response import Response
 from materials.models import Course, Lesson, CourseSubscribe
 from materials.paginators import CourseLessonPaginator
 from materials.permissions import IsModerator, IsOwner
-from materials.serializers import CourseSerializer, LessonSerializer, CourseSubscribeSerializer
+from materials.serializers import CourseSerializer, LessonSerializer, CourseSubscribeSerializer, \
+    CourseSubscribeRequestSerializer, CourseGetSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -23,8 +26,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         return super().get_permissions()
 
     def perform_create(self, serializer):
-        course = serializer.save()
-        course.owner = self.request.user
+        course = serializer.save(owner=self.request.user)
         course.save()
 
     def list(self, request, *args, **kwargs):
@@ -34,14 +36,14 @@ class CourseViewSet(viewsets.ModelViewSet):
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.get_serializer(page, many=True, context={'user': self.request.user})
+            serializer = CourseGetSerializer(page, many=True, context={'user': self.request.user})
             return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(queryset, many=True, context={'user': self.request.user})
+        serializer = CourseGetSerializer(queryset, many=True, context={'user': self.request.user})
         return Response(serializer.data)
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(instance, context={'user': self.request.user})
+        serializer = CourseGetSerializer(instance, context={'user': self.request.user})
         return Response(serializer.data)
 
 
@@ -68,8 +70,7 @@ class LessonCreateAPIView(generics.CreateAPIView):
     permission_classes = [~IsModerator]
 
     def perform_create(self, serializer):
-        lesson = serializer.save()
-        lesson.owner = self.request.user
+        lesson = serializer.save(owner=self.request.user)
         lesson.save()
 
 
@@ -87,10 +88,19 @@ class LessonDestroyAPIView(generics.DestroyAPIView):
 
 class CourseSubscribeManager(views.APIView):
 
+    @swagger_auto_schema(
+        responses={
+            201: CourseSubscribeSerializer(),
+            204: openapi.Response("Подписка удалена!")
+        },
+        request_body=CourseSubscribeRequestSerializer()
+    )
     def post(self, *args, **kwargs):
         user = self.request.user
 
-        course_pk = self.request.data.get('course')
+        serializer = CourseSubscribeRequestSerializer(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        course_pk = serializer.validated_data['course']
         course = get_object_or_404(Course, pk=course_pk)
 
         course_subscribe = CourseSubscribe.objects.filter(user=user, course=course)
@@ -103,7 +113,7 @@ class CourseSubscribeManager(views.APIView):
             response = Response(course_subscribe_serializer.data, status=status.HTTP_201_CREATED)
         else:
             course_subscribe.delete()
-            response = Response({"message": "Подписка удалена!"})
+            response = Response({"message": "Подписка удалена!"}, status=status.HTTP_204_NO_CONTENT)
 
         return response
 

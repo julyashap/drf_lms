@@ -13,6 +13,19 @@ class LessonSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     count_lessons = serializers.SerializerMethodField(read_only=True)
     lessons = LessonSerializer(many=True, source='lesson_set.all', read_only=True)
+
+    def get_count_lessons(self, obj):
+        return obj.lesson_set.count()
+
+    class Meta:
+        model = Course
+        fields = ['pk', 'name', 'description', 'price', 'count_lessons', 'lessons']
+        validators = [LinkValidator(field='description')]
+
+
+class CourseGetSerializer(serializers.ModelSerializer):
+    count_lessons = serializers.SerializerMethodField(read_only=True)
+    lessons = LessonSerializer(many=True, source='lesson_set.all', read_only=True)
     is_user_subscribe = serializers.SerializerMethodField(read_only=True)
 
     def get_count_lessons(self, obj):
@@ -31,7 +44,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['pk', 'name', 'description', 'count_lessons', 'lessons', 'is_user_subscribe']
+        fields = ['pk', 'name', 'description', 'price', 'count_lessons', 'lessons', 'is_user_subscribe']
         validators = [LinkValidator(field='description')]
 
 
@@ -39,3 +52,7 @@ class CourseSubscribeSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseSubscribe
         fields = '__all__'
+
+
+class CourseSubscribeRequestSerializer(serializers.Serializer):
+    course = serializers.IntegerField()
