@@ -23,10 +23,12 @@ class Payment(models.Model):
         ('bank', 'картой'),
     )
 
-    date = models.DateTimeField(verbose_name='дата')
-    sum = models.IntegerField(verbose_name='сумма')
+    date = models.DateTimeField(verbose_name='дата', **NULLABLE)
+    sum = models.IntegerField(verbose_name='сумма', **NULLABLE)
     way = models.CharField(max_length=4, choices=WAY_CHOICES, verbose_name='способ')
+    session_id = models.CharField(max_length=255, verbose_name='идентификатор сессии', **NULLABLE)
+    link = models.URLField(max_length=400, verbose_name='ссылка на оплату', **NULLABLE)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='пользователь')
-    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING, verbose_name='курс')
-    lesson = models.ForeignKey(Lesson, on_delete=models.DO_NOTHING, verbose_name='урок')
+    course = models.ForeignKey(Course, on_delete=models.DO_NOTHING, verbose_name='курс', **NULLABLE)
+    lesson = models.ForeignKey(Lesson, on_delete=models.DO_NOTHING, verbose_name='урок', **NULLABLE)

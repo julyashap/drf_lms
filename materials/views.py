@@ -8,7 +8,7 @@ from materials.models import Course, Lesson, CourseSubscribe
 from materials.paginators import CourseLessonPaginator
 from materials.permissions import IsModerator, IsOwner
 from materials.serializers import CourseSerializer, LessonSerializer, CourseSubscribeSerializer, \
-    CourseSubscribeRequestSerializer
+    CourseSubscribeRequestSerializer, CourseGetSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -26,8 +26,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         return super().get_permissions()
 
     def perform_create(self, serializer):
-        course = serializer.save()
-        course.owner = self.request.user
+        course = serializer.save(owner=self.request.user)
         course.save()
 
     def list(self, request, *args, **kwargs):
@@ -37,14 +36,14 @@ class CourseViewSet(viewsets.ModelViewSet):
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.get_serializer(page, many=True, context={'user': self.request.user})
+            serializer = CourseGetSerializer(page, many=True, context={'user': self.request.user})
             return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(queryset, many=True, context={'user': self.request.user})
+        serializer = CourseGetSerializer(queryset, many=True, context={'user': self.request.user})
         return Response(serializer.data)
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(instance, context={'user': self.request.user})
+        serializer = CourseGetSerializer(instance, context={'user': self.request.user})
         return Response(serializer.data)
 
 
@@ -71,8 +70,7 @@ class LessonCreateAPIView(generics.CreateAPIView):
     permission_classes = [~IsModerator]
 
     def perform_create(self, serializer):
-        lesson = serializer.save()
-        lesson.owner = self.request.user
+        lesson = serializer.save(owner=self.request.user)
         lesson.save()
 
 
