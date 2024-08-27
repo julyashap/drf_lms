@@ -1,3 +1,5 @@
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, viewsets, status
 from rest_framework import views
 from rest_framework.generics import get_object_or_404
@@ -5,7 +7,8 @@ from rest_framework.response import Response
 from materials.models import Course, Lesson, CourseSubscribe
 from materials.paginators import CourseLessonPaginator
 from materials.permissions import IsModerator, IsOwner
-from materials.serializers import CourseSerializer, LessonSerializer, CourseSubscribeSerializer
+from materials.serializers import CourseSerializer, LessonSerializer, CourseSubscribeSerializer, \
+    CourseSubscribeRequestSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -87,10 +90,19 @@ class LessonDestroyAPIView(generics.DestroyAPIView):
 
 class CourseSubscribeManager(views.APIView):
 
+    @swagger_auto_schema(
+        responses={
+            201: CourseSubscribeSerializer(),
+            204: openapi.Response("Подписка удалена!")
+        },
+        request_body=CourseSubscribeRequestSerializer()
+    )
     def post(self, *args, **kwargs):
         user = self.request.user
 
-        course_pk = self.request.data.get('course')
+        serializer = CourseSubscribeRequestSerializer(data=self.request.data)
+        serializer.is_valid(raise_exception=True)
+        course_pk = serializer.validated_data['course']
         course = get_object_or_404(Course, pk=course_pk)
 
         course_subscribe = CourseSubscribe.objects.filter(user=user, course=course)
@@ -103,7 +115,7 @@ class CourseSubscribeManager(views.APIView):
             response = Response(course_subscribe_serializer.data, status=status.HTTP_201_CREATED)
         else:
             course_subscribe.delete()
-            response = Response({"message": "Подписка удалена!"})
+            response = Response({"message": "Подписка удалена!"}, status=status.HTTP_204_NO_CONTENT)
 
         return response
 
