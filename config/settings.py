@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'drf_yasg',
-    'corsheaders'
+    'corsheaders',
+    'django_celery_beat'
 ]
 
 MIDDLEWARE = [
@@ -126,3 +127,16 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ALLOW_ALL_ORIGINS = True
 
 STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
+
+CELERY_BROKER_URL = os.getenv('REDIS_URL')
+CELERY_RESULT_BACKEND = os.getenv('REDIS_URL')
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
