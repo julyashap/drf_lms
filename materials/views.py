@@ -9,6 +9,7 @@ from materials.paginators import CourseLessonPaginator
 from materials.permissions import IsModerator, IsOwner
 from materials.serializers import CourseSerializer, LessonSerializer, CourseSubscribeSerializer, \
     CourseSubscribeRequestSerializer, CourseGetSerializer
+from materials.tasks import send_course_update_info
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -45,6 +46,10 @@ class CourseViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         serializer = CourseGetSerializer(instance, context={'user': self.request.user})
         return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        course = serializer.save()
+        send_course_update_info.delay(course.pk)
 
 
 class LessonListAPIView(generics.ListAPIView):
