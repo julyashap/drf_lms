@@ -1,0 +1,106 @@
+[
+  {
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$kuWCkci0IWy39pKvhl8NCe$4pEhA4DgmKqHS9d+/geHDjWEnIGj1IPchWccRm2Gbew=",
+      "last_login": "2024-08-17T13:47:42.165Z",
+      "is_superuser": true,
+      "first_name": "Julya",
+      "last_name": "Shapaeva",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2024-08-11T22:07:54.533Z",
+      "email": "admin@admin.ru",
+      "avatar": "",
+      "phone": null,
+      "city": "Kazan",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$F8KQSNqHbCsiCitE2Dlyl6$0ZDQk8FmcDqYxO/zFIOgdK+383uE7OhJuN2LEb87JkE=",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Julya",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-08-17T13:17:47.510Z",
+      "email": "shap@shap.ru",
+      "avatar": "",
+      "phone": null,
+      "city": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$8qtp3AqUVMZBIQm0B5GQCF$WB4vnz6p0C0IEAeDieohozPI2ew3/J1N51CxWlc4Q0g=",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-08-17T13:49:30Z",
+      "email": "moder1@moder.ru",
+      "avatar": "",
+      "phone": null,
+      "city": null,
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$m2XHr2P1D2fT8vyAFZP46i$VvoR07z/RXlz2ATUbZ95w8eUS00ULQHAlP08Vbyvg44=",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-08-17T13:50:09Z",
+      "email": "moder2@moder.ru",
+      "avatar": "",
+      "phone": null,
+      "city": null,
+      "groups": [
+        1
+      ],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 6,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$X0773xk0uSlVnoSvfPAL9T$rKoLabXR6FOTaaXb20qTsXWwjdGcHyHxKY0i/P/djZw=",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-08-29T14:25:31.353Z",
+      "email": "shapaeva03@mail.ru",
+      "avatar": "",
+      "phone": null,
+      "city": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]
