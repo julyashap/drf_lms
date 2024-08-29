@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -142,3 +143,14 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+CELERY_BEAT_SCHEDULE = {
+    'check-send-course-update': {
+        'task': 'materials.tasks.check_send_course_update',
+        'schedule': timedelta(hours=4),
+    },
+    'is-user-active': {
+        'task': 'materials.tasks.is_user_active',
+        'schedule': timedelta(days=1)
+    }
+}
