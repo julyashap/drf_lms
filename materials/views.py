@@ -1,15 +1,21 @@
+from datetime import datetime
+import pytz
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, viewsets, status
 from rest_framework import views
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+from config import settings
 from materials.models import Course, Lesson, CourseSubscribe
 from materials.paginators import CourseLessonPaginator
 from materials.permissions import IsModerator, IsOwner
 from materials.serializers import CourseSerializer, LessonSerializer, CourseSubscribeSerializer, \
     CourseSubscribeRequestSerializer, CourseGetSerializer
 from materials.tasks import send_course_update_info
+
+ZONE = pytz.timezone(settings.TIME_ZONE)
+NOW = datetime.now(ZONE)
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -27,7 +33,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         return super().get_permissions()
 
     def perform_create(self, serializer):
-        course = serializer.save(owner=self.request.user)
+        course = serializer.save(owner=self.request.user, last_update=NOW)
         course.save()
 
     def list(self, request, *args, **kwargs):
@@ -48,7 +54,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def perform_update(self, serializer):
-        course = serializer.save()
+        course = serializer.save(last_update=NOW)
         send_course_update_info.delay(course.pk)
 
 
@@ -76,6 +82,11 @@ class LessonCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         lesson = serializer.save(owner=self.request.user)
+
+        course = Course.objects.filter(pk=lesson.course.pk)
+        course.last_update = NOW
+
+        course.save()
         lesson.save()
 
 
@@ -83,6 +94,15 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
     permission_classes = [IsModerator | IsOwner]
+
+    def perform_update(self, serializer):
+        lesson = serializer.save()
+
+        course = Course.objects.filter(pk=lesson.course.pk)
+        course.last_update = NOW
+
+        course.save()
+        lesson.save()
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
