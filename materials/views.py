@@ -1,21 +1,16 @@
-from datetime import datetime
-import pytz
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, viewsets, status
 from rest_framework import views
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from config import settings
 from materials.models import Course, Lesson, CourseSubscribe
 from materials.paginators import CourseLessonPaginator
 from materials.permissions import IsModerator, IsOwner
 from materials.serializers import CourseSerializer, LessonSerializer, CourseSubscribeSerializer, \
     CourseSubscribeRequestSerializer, CourseGetSerializer
+from materials.services import NOW
 from materials.tasks import send_course_update_info
-
-ZONE = pytz.timezone(settings.TIME_ZONE)
-NOW = datetime.now(ZONE)
 
 
 class CourseViewSet(viewsets.ModelViewSet):
