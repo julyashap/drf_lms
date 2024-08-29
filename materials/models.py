@@ -10,6 +10,7 @@ class Course(models.Model):
     preview = models.ImageField(upload_to='courses/', verbose_name='превью', **NULLABLE)
     description = models.TextField(verbose_name='описание')
     price = models.IntegerField(verbose_name='цена', **NULLABLE)
+    last_update = models.DateTimeField(verbose_name='последнее обновление', **NULLABLE)
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='владелец', **NULLABLE)
 

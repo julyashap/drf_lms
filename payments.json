@@ -1,0 +1,114 @@
+[
+  {
+    "model": "users.payment",
+    "pk": 1,
+    "fields": {
+      "date": "2024-08-14T14:00:00Z",
+      "sum": 20000,
+      "way": "bank",
+      "session_id": null,
+      "link": null,
+      "user": 1,
+      "course": 1,
+      "lesson": 1
+    }
+  },
+  {
+    "model": "users.payment",
+    "pk": 2,
+    "fields": {
+      "date": "2017-09-01T12:00:00Z",
+      "sum": 150000,
+      "way": "bank",
+      "session_id": null,
+      "link": null,
+      "user": 1,
+      "course": 1,
+      "lesson": 1
+    }
+  },
+  {
+    "model": "users.payment",
+    "pk": 3,
+    "fields": {
+      "date": "2021-11-15T01:00:00Z",
+      "sum": 1000,
+      "way": "cash",
+      "session_id": null,
+      "link": null,
+      "user": 1,
+      "course": 1,
+      "lesson": 1
+    }
+  },
+  {
+    "model": "users.payment",
+    "pk": 6,
+    "fields": {
+      "date": "2024-08-27T03:35:08.836Z",
+      "sum": null,
+      "way": "bank",
+      "session_id": null,
+      "link": null,
+      "user": 3,
+      "course": 8,
+      "lesson": null
+    }
+  },
+  {
+    "model": "users.payment",
+    "pk": 7,
+    "fields": {
+      "date": "2024-08-27T03:36:03.279Z",
+      "sum": null,
+      "way": "bank",
+      "session_id": null,
+      "link": null,
+      "user": 3,
+      "course": 8,
+      "lesson": null
+    }
+  },
+  {
+    "model": "users.payment",
+    "pk": 8,
+    "fields": {
+      "date": "2024-08-27T03:37:22.540Z",
+      "sum": null,
+      "way": "bank",
+      "session_id": null,
+      "link": null,
+      "user": 3,
+      "course": 8,
+      "lesson": null
+    }
+  },
+  {
+    "model": "users.payment",
+    "pk": 9,
+    "fields": {
+      "date": "2024-08-27T03:41:11.826Z",
+      "sum": null,
+      "way": "bank",
+      "session_id": null,
+      "link": null,
+      "user": 3,
+      "course": 8,
+      "lesson": null
+    }
+  },
+  {
+    "model": "users.payment",
+    "pk": 10,
+    "fields": {
+      "date": "2024-08-27T03:41:48.889Z",
+      "sum": 1000,
+      "way": "bank",
+      "session_id": "cs_test_a14G11FpVJUPO22xiLXEZM32rFrxPRnAwLZLabPOldkY5xzgVjI8kYjVsh",
+      "link": "https://checkout.stripe.com/c/pay/cs_test_a14G11FpVJUPO22xiLXEZM32rFrxPRnAwLZLabPOldkY5xzgVjI8kYjVsh#fidkdWxOYHwnPyd1blpxYHZxWjA0VXZAXUZXakh9TkxpRklyMGRPYEE9aExSaDA2dDZrQndxX0F2dDRBTG9ybj0wTktgYFFuX018VDNkdDI3bURhZGtEXGxNQVBPV0FEfGtxXWlHS09tcXFvNTVCYWFhNUB0dCcpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl",
+      "user": 3,
+      "course": 8,
+      "lesson": null
+    }
+  }
+]

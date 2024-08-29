@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -67,7 +68,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD')
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': int(os.getenv('DB_PORT'))
     }
 }
 
@@ -140,3 +143,14 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+CELERY_BEAT_SCHEDULE = {
+    'check-send-course-update': {
+        'task': 'materials.tasks.check_send_course_update',
+        'schedule': timedelta(hours=4),
+    },
+    'is-user-active': {
+        'task': 'materials.tasks.is_user_active',
+        'schedule': timedelta(days=1)
+    }
+}

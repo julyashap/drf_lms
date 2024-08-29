@@ -1,4 +1,7 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, AuthUser
+from rest_framework_simplejwt.tokens import Token
+from materials.services import NOW
 from users.models import User, Payment
 
 
@@ -44,3 +47,14 @@ class PaymentLessonSerializer(serializers.ModelSerializer):
 
 class PaymentStatusSerializer(serializers.Serializer):
     session_id = serializers.CharField()
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user: AuthUser) -> Token:
+        token = super().get_token(user)
+
+        user.last_login = NOW
+        user.save()
+
+        return token

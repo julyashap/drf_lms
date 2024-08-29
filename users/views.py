@@ -11,8 +11,10 @@ from config import settings
 from users.models import User, Payment
 from users.permissions import IsCurrentUser
 from users.serializers import UserSerializer, PaymentSerializer, AnotherUserSerializer, PaymentCourseSerializer, \
-    PaymentLessonSerializer, PaymentStatusSerializer
+    PaymentLessonSerializer, PaymentStatusSerializer, CustomTokenObtainPairSerializer
 from users.services import perform_create_payment
+from rest_framework_simplejwt.views import (TokenObtainPairView as BaseTokenObtainPairView,
+                                            TokenRefreshView as BaseTokenRefreshView)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -79,3 +81,11 @@ class PaymentStatusAPIView(views.APIView):
         payment_status = stripe.checkout.Session.retrieve(session_id)
 
         return Response({'status': payment_status.get('status')}, status=status.HTTP_200_OK)
+
+
+class TokenObtainPairView(BaseTokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+
+
+class TokenRefreshView(BaseTokenRefreshView):
+    pass
