@@ -32,7 +32,7 @@ def check_send_course_update():
         send_course_update_info(course.pk)
 
 
-def check_send_course_update():
+def is_user_active():
     month = NOW - timedelta(days=28)
 
     users_not_active = User.objects.filter(last_login__lte=month)
