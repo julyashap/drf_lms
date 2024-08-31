@@ -1,5 +1,8 @@
+from datetime import timedelta
 import stripe
 from config import settings
+from materials.services import NOW
+from users.models import User
 
 stripe.api_key = settings.STRIPE_API_KEY
 
@@ -37,3 +40,14 @@ def perform_create_payment(payment, price, name):
         payment.link = payment_link
 
     payment.save()
+
+
+def is_user_active():
+    month = NOW - timedelta(days=28)
+
+    users_not_active = User.objects.filter(last_login__lte=month)
+
+    for user in users_not_active:
+        if not user.is_staff or not user.is_superuser:
+            user.is_active = False
+            user.save()

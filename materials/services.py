@@ -30,14 +30,3 @@ def check_send_course_update():
 
     for course in courses_not_updated:
         send_course_update_info(course.pk)
-
-
-def is_user_active():
-    month = NOW - timedelta(days=28)
-
-    users_not_active = User.objects.filter(last_login__lte=month)
-
-    for user in users_not_active:
-        if not user.is_staff or not user.is_superuser:
-            user.is_active = False
-            user.save()
