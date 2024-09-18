@@ -1,0 +1,57 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    networks:
+      - backend
+
+  db:
+    image: postgres
+    networks:
+      - backend
+    env_file:
+      - /.env
+
+  redis:
+    image: redis
+    networks:
+      - backend
+
+  celery:
+    build: .
+    networks:
+      - backend
+    volumes:
+      - .:/app
+    command: celery -A config worker --pool=solo --loglevel=info
+    depends_on:
+      - redis
+      - web
+      - db
+    env_file:
+      - /.env
+
+  celery-beat:
+    build: .
+    networks:
+      - backend
+    volumes:
+      - .:/app
+    command: celery -A config beat --loglevel=info
+    depends_on:
+      - celery
+      - redis
+      - web
+      - db
+    env_file:
+      - /.env
+
+networks:
+  backend:
+    external: false
