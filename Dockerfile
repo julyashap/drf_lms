@@ -10,5 +10,3 @@ RUN poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-ansi
 
 COPY . .
-
-CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
