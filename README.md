@@ -1,4 +1,4 @@
-# Habits Service
+# DRF LMS
 Программное обеспечение для LMS-системы.
 
 
