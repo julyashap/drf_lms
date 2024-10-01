@@ -13,7 +13,7 @@
 #### Через HTTPS:
 ```git clone https://github.com/julyashap/drf_lms.git```
 
-2. Переход в директорию habits_service
+2. Переход в директорию drf_lms
 
 ```cd drf_lms```
 
